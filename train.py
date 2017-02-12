@@ -25,7 +25,7 @@ def compute_hu(roi):
 def binirize(threshold, img):
     img_binary = (img < threshold).astype(np.double)
     img_label = label(img_binary, background=0)
-    print np.amax(img_label)
+    # print np.amax(img_label)
     regions = regionprops(img_label)
     # io.imshow(img_binary)
     ax = plt.gca()
@@ -49,10 +49,10 @@ def binirize(threshold, img):
     # ax.title('Bounding Boxes')
     # io.show()
     return Features
-    
-def read_files(path, file_name, show_pic=False):
-    img = io.imread(paht + file_name)
-    print img.shape
+
+def read_files(path, file_name, post_fix, show_pic=False):
+    img = io.imread(path + file_name + post_fix)
+    #print img.shape
     # io.imshow(img)
     # plt.title('A img')
     # io.show()
