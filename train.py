@@ -27,7 +27,7 @@ def binirize(threshold, img):
     img_label = label(img_binary, background=0)
     print np.amax(img_label)
     regions = regionprops(img_label)
-    io.imshow(img_binary)
+    # io.imshow(img_binary)
     ax = plt.gca()
     sum_size = 0
     count = 0
@@ -48,18 +48,18 @@ def binirize(threshold, img):
         Features.append(hu)
     # ax.title('Bounding Boxes')
     # io.show()
-
-def read_files():
-    img = io.imread('./H1-16images/z.bmp')
+    return Features
+    
+def read_files(path, file_name, show_pic=False):
+    img = io.imread(paht + file_name)
     print img.shape
     # io.imshow(img)
     # plt.title('A img')
     # io.show()
-
     # hist = exposure.histogram(img)
     # plt.bar(hist[1], hist[0])
     # plt.title('Histogram')
     # plt.show()
-    binirize(200, img)
-if __name__ == '__main__':
-    read_files()
+    return binirize(200, img)
+# if __name__ == '__main__':
+#     read_files()
