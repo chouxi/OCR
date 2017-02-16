@@ -1,8 +1,15 @@
-"""
-@Author:	Zane Qi
-@E-mail:	qizheng1993hit@gamil.com
-@Date:		12/Feb/2017 (Sun) 18:50:23
-"""
+'''
+# =============================================================================
+#      FileName: proc_files.py
+#          Desc: 
+#        Author: ZaneQi
+#         Email: qizheng1993hit@gmail.com
+#      HomePage: https://github.com/chouxi
+#       Version: 0.0.1
+#    LastChange: 2017-02-15 22:57:06
+#       History:
+# =============================================================================
+'''
 import numpy as np
 from skimage.measure import label, regionprops, moments, moments_central, moments_normalized, moments_hu
 from skimage import io, exposure
