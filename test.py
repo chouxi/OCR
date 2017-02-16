@@ -1,9 +1,15 @@
-"""
-@Author:	Zane Qi
-@E-mail:	qizheng1993hit@gamil.com
-@Date:		12/Feb/2017 (Sun) 18:52:42
-"""
-
+'''
+# =============================================================================
+#      FileName: test.py
+#          Desc: 
+#        Author: ZaneQi
+#         Email: qizheng1993hit@gmail.com
+#      HomePage: https://github.com/chouxi
+#       Version: 0.0.1
+#    LastChange: 2017-02-15 22:57:33
+#       History:
+# =============================================================================
+'''
 from scipy.spatial.distance import cdist
 
 import numpy as np
@@ -19,6 +25,7 @@ def test_features(mean, std, file_name):
 
 def recognition(test_features, data_base, char_index):
     D = cdist(test_features, data_base)
+    print len(D)
     D_index = np.argsort(D, axis=1)
     prediction = []
     for i in range(len(D_index[:,0])):

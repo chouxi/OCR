@@ -1,9 +1,15 @@
-"""
-@Author:    Zane Qi
-@E-mail:    qizheng1993hit@gamil.com
-@Date:      11/Feb/2017 (Sat) 19:17:00
-"""
-
+'''
+# =============================================================================
+#      FileName: train.py
+#          Desc: 
+#        Author: ZaneQi
+#         Email: qizheng1993hit@gmail.com
+#      HomePage: https://github.com/chouxi
+#       Version: 0.0.1
+#    LastChange: 2017-02-15 22:57:49
+#       History:
+# =============================================================================
+'''
 from skimage import io
 import numpy as np
 import matplotlib.pyplot as plt
