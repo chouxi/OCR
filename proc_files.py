@@ -16,7 +16,6 @@ from skimage.measure import label, regionprops, moments, moments_central, moment
 from skimage import io, exposure
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
-import pickle
 
 def compute_hu(roi):
     m = moments(roi)
@@ -32,27 +31,25 @@ def binirize(threshold, img):
     img_label = label(img_binary, background=0)
     # print np.amax(img_label)
     regions = regionprops(img_label)
-    # io.imshow(img_binary)
+    #io.imshow(img_binary)
     ax = plt.gca()
-    sum_size = 0
-    count = 0
     Features=[]
+    sum_length = 0.0
+    sum_width = 0.0
+    count = len(regions)
     for props in regions:
         minr, minc, maxr, maxc = props.bbox
-        sum_size += (maxc-minc) * (maxr-minr)
-        count += 1
-    # Set the 1/5 of the mean as the size_threshould
-    # Because there need different size_threshould for each character.
-    size_thre = sum_size / (count * 5)
+        sum_length += (maxc-minc)
+        sum_width += (maxr-minr)
     for props in regions:
         minr, minc, maxr, maxc = props.bbox
-        if (maxc-minc) * (maxr-minr) < size_thre:
+        if (maxc-minc) < sum_length / (count * 3.0) or (maxr-minr) < sum_width / (count * 3.0) or (maxc-minc) > sum_length / count * 3.0 or (maxr-minr) > sum_width / count * 3.0:
             continue
         ax.add_patch(Rectangle((minc, minr), maxc - minc, maxr - minr, fill=False, edgecolor='red', linewidth=1))
         hu = compute_hu(img_binary[minr:maxr, minc:maxc])
         Features.append(hu)
-    # ax.title('Bounding Boxes')
-    # io.show()
+    print len(Features)
+    #io.show()
     return Features
 
 def read_files(path, file_name, post_fix, show_pic=False):
@@ -65,8 +62,8 @@ def read_files(path, file_name, post_fix, show_pic=False):
     # plt.bar(hist[1], hist[0])
     # plt.title('Histogram')
     # plt.show()
-    return binirize(200, img)
+    return binirize(180, img)
 
 def read_test_files(file_name, show_pic=False):
     img = io.imread(file_name)
-    return binirize(200, img)
+    return binirize(180, img)

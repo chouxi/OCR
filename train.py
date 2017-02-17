@@ -42,8 +42,8 @@ def train_features():
     for f_name in file_list:
         features_list += read_files(file_path, f_name, post_fix)
         char_index.append((f_name, len(features_list)))
-    # mean = calc_mean(features_list)
-    # std = calc_std(features_list, mean)
+    #mean = calc_mean(features_list)
+    #std = calc_std(features_list, mean)
     mean = np.mean(features_list)
     std = np.std(features_list)
     normalize(features_list, mean, std)
