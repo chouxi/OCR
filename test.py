@@ -19,13 +19,14 @@ from train import index_2_char
 
 def test_features(mean, std, file_name):
     features_list = []
-    features_list = read_test_files(file_name)
+    centers_list = []
+    res = read_test_files(file_name)
+    features_list = res[0]
     normalize(features_list, mean, std)
-    return features_list
+    return [features_list, res[1]]
 
 def recognition(test_features, data_base, char_index):
     D = cdist(test_features, data_base)
-    print len(D)
     D_index = np.argsort(D, axis=1)
     prediction = []
     for i in range(len(D_index[:,0])):

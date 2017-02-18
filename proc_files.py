@@ -34,6 +34,7 @@ def binirize(threshold, img):
     #io.imshow(img_binary)
     ax = plt.gca()
     Features=[]
+    centers=[]
     sum_length = 0.0
     sum_width = 0.0
     count = len(regions)
@@ -48,9 +49,10 @@ def binirize(threshold, img):
         ax.add_patch(Rectangle((minc, minr), maxc - minc, maxr - minr, fill=False, edgecolor='red', linewidth=1))
         hu = compute_hu(img_binary[minr:maxr, minc:maxc])
         Features.append(hu)
+        centers.append(props.centroid)
     print len(Features)
     #io.show()
-    return Features
+    return [Features, centers]
 
 def read_files(path, file_name, post_fix, show_pic=False):
     img = io.imread(path + file_name + post_fix)
@@ -62,7 +64,7 @@ def read_files(path, file_name, post_fix, show_pic=False):
     # plt.bar(hist[1], hist[0])
     # plt.title('Histogram')
     # plt.show()
-    return binirize(180, img)
+    return binirize(180, img)[0]
 
 def read_test_files(file_name, show_pic=False):
     img = io.imread(file_name)
