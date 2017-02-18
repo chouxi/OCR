@@ -48,9 +48,9 @@ def train_features():
     std = np.std(features_list)
     normalize(features_list, mean, std)
     D = cdist(features_list, features_list)
-    # io.imshow(D)
-    # plt.title('Dis Mat')
-    # io.show()
+    io.imshow(D)
+    plt.title('Dis Mat')
+    io.show()
     D_index =np.argsort(D, axis=1)
     Ytrue = []
     Ypred = []

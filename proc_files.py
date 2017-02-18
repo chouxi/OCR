@@ -6,7 +6,7 @@
 #         Email: qizheng1993hit@gmail.com
 #      HomePage: https://github.com/chouxi
 #       Version: 0.0.1
-#    LastChange: 2017-02-15 22:57:06
+#    LastChange: 2017-02-18 14:56:37
 #       History:
 # =============================================================================
 '''
@@ -32,21 +32,22 @@ def binirize(threshold, img):
     # print np.amax(img_label)
     regions = regionprops(img_label)
     #io.imshow(img_binary)
-    ax = plt.gca()
+    #ax = plt.gca()
     Features=[]
     centers=[]
     sum_length = 0.0
     sum_width = 0.0
     count = len(regions)
+    ratio = 3.0
     for props in regions:
         minr, minc, maxr, maxc = props.bbox
         sum_length += (maxc-minc)
         sum_width += (maxr-minr)
     for props in regions:
         minr, minc, maxr, maxc = props.bbox
-        if (maxc-minc) < sum_length / (count * 3.0) or (maxr-minr) < sum_width / (count * 3.0) or (maxc-minc) > sum_length / count * 3.0 or (maxr-minr) > sum_width / count * 3.0:
+        if (maxc-minc) < sum_length / (count * ratio) or (maxr-minr) < sum_width / (count * ratio) or (maxc-minc) > sum_length / count * ratio or (maxr-minr) > sum_width / count * ratio:
             continue
-        ax.add_patch(Rectangle((minc, minr), maxc - minc, maxr - minr, fill=False, edgecolor='red', linewidth=1))
+        #ax.add_patch(Rectangle((minc, minr), maxc - minc, maxr - minr, fill=False, edgecolor='red', linewidth=1))
         hu = compute_hu(img_binary[minr:maxr, minc:maxc])
         Features.append(hu)
         centers.append(props.centroid)
