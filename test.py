@@ -6,7 +6,7 @@
 #         Email: qizheng1993hit@gmail.com
 #      HomePage: https://github.com/chouxi
 #       Version: 0.0.1
-#    LastChange: 2017-02-15 22:57:33
+#    LastChange: 2017-02-20 16:10:10
 #       History:
 # =============================================================================
 '''
@@ -41,13 +41,12 @@ def k_nn(D_index, char_index, k):
     result = []
     for d in prediction:
         tmp = max(d.items(), key=lambda x: x[1])
-        print tmp
         if tmp[1] == 1:
             result.append(d.keys()[0])
         else:
             result.append(tmp[0])
     return result
-def recognition(test_features, data_base, char_index):
+def recognition(test_features, data_base, char_index, k=5):
     D = cdist(test_features, data_base)
     D_index = np.argsort(D, axis=1)
-    return k_nn(D_index, char_index, 5)
+    return k_nn(D_index, char_index, k)

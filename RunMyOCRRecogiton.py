@@ -6,7 +6,7 @@
 #         Email: qizheng1993hit@gmail.com
 #      HomePage: https://github.com/chouxi
 #       Version: 0.0.1
-#    LastChange: 2017-02-18 14:13:55
+#    LastChange: 2017-02-20 16:15:55
 #       History:
 # =============================================================================
 '''
@@ -37,3 +37,11 @@ if __name__ == '__main__':
     mydict = pickle.load(pkl_file)
     pkl_file.close()
     print get_ratio(mydict['classes'], mydict['locations'], test_classes, test_data[1])
+    '''
+    for i in range(2,20):
+        test_classes = test.recognition(test_data[0], train_data[2],train_data[3], i)
+        pkl_file = open(args.ground_truth, 'rb')
+        mydict = pickle.load(pkl_file)
+        pkl_file.close()
+        print i, get_ratio(mydict['classes'], mydict['locations'], test_classes, test_data[1])
+    '''

@@ -35,6 +35,7 @@ def compute_hu(roi):
     return hu
 
 def binirize(threshold, img):
+    #img_binary = (img < threshold).astype(np.double)
     threshould_img = (img < threshold).astype(np.double)
     img_binary = dilation_erosion(threshould_img)
     img_label = label(img_binary, background=0)
@@ -60,7 +61,7 @@ def binirize(threshold, img):
         hu = compute_hu(img_binary[minr:maxr, minc:maxc])
         Features.append(hu)
         centers.append(props.centroid)
-    print len(Features)
+    #print len(Features)
     #io.show()
     return [Features, centers]
 
