@@ -40,7 +40,6 @@ def k_nn(D_index, char_index, k):
                     prediction[i].setdefault(cur_char, 1)
     result = []
     for d in prediction:
-        print d
         tmp = max(d.items(), key=lambda x: x[1])
         print tmp
         if tmp[1] == 1:
@@ -51,4 +50,4 @@ def k_nn(D_index, char_index, k):
 def recognition(test_features, data_base, char_index):
     D = cdist(test_features, data_base)
     D_index = np.argsort(D, axis=1)
-    return k_nn(D_index, char_index, 10)
+    return k_nn(D_index, char_index, 5)
