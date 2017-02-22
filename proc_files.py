@@ -6,7 +6,7 @@
 #         Email: qizheng1993hit@gmail.com
 #      HomePage: https://github.com/chouxi
 #       Version: 0.0.1
-#    LastChange: 2017-02-21 23:47:56
+#    LastChange: 2017-02-22 12:11:21
 #       History:
 # =============================================================================
 '''
@@ -33,7 +33,7 @@ def compute_hu(roi):
     mu = moments_central(roi, cr, cc)
     nu = moments_normalized(mu)
     hu = moments_hu(nu).tolist()
-    #hu.append(perimeter(roi))
+    hu.append(perimeter(roi))
     return hu
 
 def binirize(threshold, img):
@@ -61,6 +61,7 @@ def binirize(threshold, img):
             continue
         ax.add_patch(Rectangle((minc, minr), maxc - minc, maxr - minr, fill=False, edgecolor='red', linewidth=1))
         hu = compute_hu(img_binary[minr:maxr, minc:maxc])
+        #hu.append(perimeter(img_binary[minr:maxr, minc:maxc]) / ((maxr-minr)*(maxc-minc)))
         Features.append(hu)
         centers.append(props.centroid)
     #print len(Features)
