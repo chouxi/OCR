@@ -13,6 +13,7 @@
 
 import numpy as np
 from skimage.measure import label, regionprops, moments, moments_central, moments_normalized, moments_hu, perimeter
+from skimage.filters import thresholding
 from skimage import io, exposure, morphology
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
@@ -32,7 +33,7 @@ def compute_hu(roi):
     mu = moments_central(roi, cr, cc)
     nu = moments_normalized(mu)
     hu = moments_hu(nu).tolist()
-    # hu.append(perimeter(roi))
+    #hu.append(perimeter(roi))
     return hu
 
 def binirize(threshold, img):
@@ -76,8 +77,8 @@ def read_files(path, file_name, post_fix, show_pic=False):
     # plt.bar(hist[1], hist[0])
     # plt.title('Histogram')
     # plt.show()
-    return binirize(180, img)[0]
+    return binirize(thresholding.threshold_yen(img), img)[0]
 
 def read_test_files(file_name, show_pic=False):
     img = io.imread(file_name)
-    return binirize(180, img)
+    return binirize(thresholding.threshold_yen(img), img)
