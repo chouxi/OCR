@@ -32,6 +32,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     train_data = train_features()
     test_data = test.test_features(train_data[0], train_data[1], args.test_file)
+    '''
     test_classes = test.recognition(test_data[0], train_data[2],train_data[3])
     pkl_file = open(args.ground_truth, 'rb')
     mydict = pickle.load(pkl_file)
@@ -44,4 +45,3 @@ if __name__ == '__main__':
         mydict = pickle.load(pkl_file)
         pkl_file.close()
         print i, get_ratio(mydict['classes'], mydict['locations'], test_classes, test_data[1])
-    '''

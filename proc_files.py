@@ -6,13 +6,13 @@
 #         Email: qizheng1993hit@gmail.com
 #      HomePage: https://github.com/chouxi
 #       Version: 0.0.1
-#    LastChange: 2017-02-20 13:14:45
+#    LastChange: 2017-02-21 23:47:56
 #       History:
 # =============================================================================
 '''
 
 import numpy as np
-from skimage.measure import label, regionprops, moments, moments_central, moments_normalized, moments_hu
+from skimage.measure import label, regionprops, moments, moments_central, moments_normalized, moments_hu, perimeter
 from skimage import io, exposure, morphology
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
@@ -31,7 +31,8 @@ def compute_hu(roi):
     cc = m[1, 0] / m[0, 0]
     mu = moments_central(roi, cr, cc)
     nu = moments_normalized(mu)
-    hu = moments_hu(nu)
+    hu = moments_hu(nu).tolist()
+    # hu.append(perimeter(roi))
     return hu
 
 def binirize(threshold, img):
