@@ -33,7 +33,7 @@ def compute_hu(roi):
     mu = moments_central(roi, cr, cc)
     nu = moments_normalized(mu)
     hu = moments_hu(nu).tolist()
-    hu.append(perimeter(roi))
+    #hu.append(perimeter(roi))
     return hu
 
 def binirize(threshold, img):
@@ -50,7 +50,7 @@ def binirize(threshold, img):
     sum_length = 0.0
     sum_width = 0.0
     count = len(regions)
-    ratio = 3.0
+    ratio = 2.5
     for props in regions:
         minr, minc, maxr, maxc = props.bbox
         sum_length += (maxc-minc)
@@ -58,10 +58,11 @@ def binirize(threshold, img):
     for props in regions:
         minr, minc, maxr, maxc = props.bbox
         if (maxc-minc) < sum_length / (count * ratio) or (maxr-minr) < sum_width / (count * ratio) or (maxc-minc) > sum_length / count * ratio or (maxr-minr) > sum_width / count * ratio:
+        #if (maxc-minc) < 10 or (maxr-minr) < 10 or (maxc-minc) > 100 or (maxr-minr) > 100:
             continue
         ax.add_patch(Rectangle((minc, minr), maxc - minc, maxr - minr, fill=False, edgecolor='red', linewidth=1))
         hu = compute_hu(img_binary[minr:maxr, minc:maxc])
-        #hu.append(perimeter(img_binary[minr:maxr, minc:maxc]) / ((maxr-minr)*(maxc-minc)))
+        hu.append(perimeter(img_binary[minr:maxr, minc:maxc]) / float((abs(maxr-minr)*abs(maxc-minc))))
         Features.append(hu)
         centers.append(props.centroid)
     #print len(Features)
@@ -78,8 +79,10 @@ def read_files(path, file_name, post_fix, show_pic=False):
     # plt.bar(hist[1], hist[0])
     # plt.title('Histogram')
     # plt.show()
+    #return binirize(200, img)[0]
     return binirize(thresholding.threshold_yen(img), img)[0]
 
 def read_test_files(file_name, show_pic=False):
     img = io.imread(file_name)
+    #return binirize(200, img)
     return binirize(thresholding.threshold_yen(img), img)

@@ -53,10 +53,7 @@ def index_2_char(index, char_index):
             break
     return result
 
-def train_features():
-    file_list = ['a', 'd', 'f', 'h', 'k', 'm', 'n', 'o', 'p', 'q', 'r', 's', 'u', 'w', 'x', 'z']
-    file_path = './H1-16images/'
-    post_fix = '.bmp'
+def train_features(file_list, file_path, post_fix):
     features_list = []
     char_index = []
     for f_name in file_list:
