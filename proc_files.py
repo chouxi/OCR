@@ -6,7 +6,7 @@
 #         Email: qizheng1993hit@gmail.com
 #      HomePage: https://github.com/chouxi
 #       Version: 0.0.1
-#    LastChange: 2017-02-22 12:11:21
+#    LastChange: 2017-02-23 23:47:52
 #       History:
 # =============================================================================
 '''
@@ -17,6 +17,7 @@ from skimage.filters import thresholding
 from skimage import io, exposure, morphology
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
+import math
 
 def dilation_erosion(origin_bi_img):
     #dilation_mat = [[0,1,1,0],[1,1,1,1],[0,1,1,0],[0,1,1,0]]
@@ -33,10 +34,10 @@ def compute_hu(roi):
     mu = moments_central(roi, cr, cc)
     nu = moments_normalized(mu)
     hu = moments_hu(nu).tolist()
-    #hu.append(perimeter(roi))
     return hu
 
-def binirize(threshold, img):
+def binirize(threshold, img, add_text=False, prediction=[]):
+    i = 0
     #img_binary = (img < threshold).astype(np.double)
     threshould_img = (img < threshold).astype(np.double)
     img_binary = dilation_erosion(threshould_img)
@@ -50,7 +51,7 @@ def binirize(threshold, img):
     sum_length = 0.0
     sum_width = 0.0
     count = len(regions)
-    ratio = 2.5
+    ratio = 3.0
     for props in regions:
         minr, minc, maxr, maxc = props.bbox
         sum_length += (maxc-minc)
@@ -62,14 +63,26 @@ def binirize(threshold, img):
             continue
         ax.add_patch(Rectangle((minc, minr), maxc - minc, maxr - minr, fill=False, edgecolor='red', linewidth=1))
         hu = compute_hu(img_binary[minr:maxr, minc:maxc])
-        hu.append(perimeter(img_binary[minr:maxr, minc:maxc]) / float((abs(maxr-minr)*abs(maxc-minc))))
+        #circularity
+        pr = perimeter(img_binary[minr:maxr, minc:maxc])
+        area = (maxc-minc) * (maxr-minr)
+        hu.append((area / (pr*pr)) * 4 * math.pi)
+        #density
+        hu.append(area /float(props.convex_area))
+        #convexity
+        convex_img = props.convex_image
+        pr_conv = perimeter(convex_img)
+        hu.append(pr_conv - pr)
         Features.append(hu)
         centers.append(props.centroid)
-    #print len(Features)
+        if add_text:
+            plt.text(props.centroid[1] + 20,props.centroid[0] +20, prediction[i],color='green', fontsize=20)
+            i += 1
+    plt.title("bounding box")
     #io.show()
     return [Features, centers]
 
-def read_files(path, file_name, post_fix, show_pic=False):
+def read_files(path, file_name, post_fix, add_text=False, prediction=[]):
     img = io.imread(path + file_name + post_fix)
     #print img.shape
     # io.imshow(img)
@@ -80,9 +93,9 @@ def read_files(path, file_name, post_fix, show_pic=False):
     # plt.title('Histogram')
     # plt.show()
     #return binirize(200, img)[0]
-    return binirize(thresholding.threshold_yen(img), img)[0]
+    return binirize(thresholding.threshold_yen(img), img, add_text, prediction)[0]
 
-def read_test_files(file_name, show_pic=False):
+def read_test_files(file_name, add_text=False, prediction=[]):
     img = io.imread(file_name)
     #return binirize(200, img)
-    return binirize(thresholding.threshold_yen(img), img)
+    return binirize(thresholding.threshold_yen(img), img, add_text, prediction)

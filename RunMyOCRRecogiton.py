@@ -41,14 +41,13 @@ if __name__ == '__main__':
     file_path = './H1-16images/'
     post_fix = '.bmp'
     train_data = train_features(file_list, file_path, post_fix)
-    '''
     test_data = test.test_features(train_data[0], train_data[1], args.test_file)
     test_classes = test.recognition(test_data[0], train_data[2],train_data[3], 1)
     pkl_file = open(args.ground_truth, 'rb')
     mydict = pickle.load(pkl_file)
     pkl_file.close()
     print get_ratio(mydict['classes'], mydict['locations'], test_classes, test_data[1])
-    '''
+    #test.read_test_files(args.test_file, True, test_classes)
     '''
     for char in file_list:
         test_data = test.test_features(train_data[0], train_data[1], file_path+char+post_fix)
@@ -59,11 +58,9 @@ if __name__ == '__main__':
         print char
         print tmp
     '''
-    '''
     for i in range(2,20):
         test_classes = test.recognition(test_data[0], train_data[2],train_data[3], i)
         pkl_file = open(args.ground_truth, 'rb')
         mydict = pickle.load(pkl_file)
         pkl_file.close()
         print i, get_ratio(mydict['classes'], mydict['locations'], test_classes, test_data[1])
-    '''
