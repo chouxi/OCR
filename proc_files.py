@@ -36,11 +36,14 @@ def compute_hu(roi):
     hu = moments_hu(nu).tolist()
     return hu
 
-def binirize(threshold, img, add_text=False, prediction=[]):
+def binirize(threshold, img, enhancement_hash, enhancement_flag, add_text=False, prediction=[]):
     i = 0
-    #img_binary = (img < threshold).astype(np.double)
-    threshould_img = (img < threshold).astype(np.double)
-    img_binary = dilation_erosion(threshould_img)
+    if enhancement_flag & enhancement_hash['morphology']:
+        #print 'morphology'
+        threshould_img = (img < threshold).astype(np.double)
+        img_binary = dilation_erosion(threshould_img)
+    else:
+        img_binary = (img < threshold).astype(np.double)
     img_label = label(img_binary, background=0)
     # print np.amax(img_label)
     regions = regionprops(img_label)
@@ -62,21 +65,31 @@ def binirize(threshold, img, add_text=False, prediction=[]):
     upper_r = sum_width / count * ratio
     for props in regions:
         minr, minc, maxr, maxc = props.bbox
-        if (maxc-minc) < lower_c or (maxr-minr) < lower_r or (maxc-minc) > upper_c or (maxr-minr) > upper_r:
+        if enhancement_flag & enhancement_hash['size_threshold']:
+            #print 'size_threshold'
+            if (maxc-minc) < lower_c or (maxr-minr) < lower_r or (maxc-minc) > upper_c or (maxr-minr) > upper_r:
+                continue
+        else:
+            if (maxc-minc) < 10 or (maxr-minr) < 10:
+                continue
         #if (maxc-minc) < 10 or (maxr-minr) < 10 or (maxc-minc) > 100 or (maxr-minr) > 100:
-        #if (maxc-minc) < 10 or (maxr-minr) < 10:
-            continue
         hu = compute_hu(img_binary[minr:maxr, minc:maxc])
-        #circularity
         pr = perimeter(img_binary[minr:maxr, minc:maxc])
         area = (maxc-minc) * (maxr-minr)
-        hu.append((area / (pr*pr)) * 4 * math.pi)
-        #density
-        hu.append(area /float(props.convex_area))
-        #convexity
-        convex_img = props.convex_image
-        pr_conv = perimeter(convex_img)
-        hu.append(pr_conv - pr)
+        if enhancement_flag & enhancement_hash['circularity']:
+            #print 'circularity'
+            #circularity
+            hu.append((area / (pr*pr)) * 4 * math.pi)
+        if enhancement_flag & enhancement_hash['density']:
+            #print 'density'
+            #density
+            hu.append(area /float(props.convex_area))
+        if enhancement_flag & enhancement_hash['convexity']:
+            #print 'convexity'
+            #convexity
+            convex_img = props.convex_image
+            pr_conv = perimeter(convex_img)
+            hu.append(pr_conv - pr)
         Features.append(hu)
         centers.append(props.centroid)
         if add_text:
@@ -91,7 +104,7 @@ def binirize(threshold, img, add_text=False, prediction=[]):
         #print lower_c, lower_r, upper_c, upper_r
     return [Features, centers]
 
-def read_files(path, file_name, post_fix, add_text=False, prediction=[]):
+def read_files(path, file_name, post_fix, enhancement_hash, enhancement_flag, add_text=False, prediction=[]):
     img = io.imread(path + file_name + post_fix)
     #print img.shape
     # io.imshow(img)
@@ -101,10 +114,15 @@ def read_files(path, file_name, post_fix, add_text=False, prediction=[]):
     # plt.bar(hist[1], hist[0])
     # plt.title('Histogram')
     # plt.show()
-    #return binirize(200, img, add_text, prediction)[0]
-    return binirize(thresholding.threshold_yen(img), img, add_text, prediction)[0]
+    if enhancement_flag & enhancement_hash['image_threshold']:
+        return binirize(thresholding.threshold_yen(img), img, enhancement_hash, enhancement_flag, add_text, prediction)[0]
+    else:
+        return binirize(200, img, enhancement_hash, enhancement_flag, add_text, prediction)[0]
 
-def read_test_files(file_name, add_text=False, prediction=[]):
+def read_test_files(file_name, enhancement_hash, enhancement_flag, add_text=False, prediction=[]):
     img = io.imread(file_name)
-    #return binirize(200, img, add_text, prediction)
-    return binirize(thresholding.threshold_yen(img), img, add_text, prediction)
+    if enhancement_flag & enhancement_hash['image_threshold']:
+        #print 'image_threshold'
+        return binirize(thresholding.threshold_yen(img), img, enhancement_hash, enhancement_flag, add_text, prediction)
+    else:
+        return binirize(200, img, enhancement_hash, enhancement_flag, add_text, prediction)

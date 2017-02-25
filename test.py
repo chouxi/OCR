@@ -18,10 +18,10 @@ from train import normalize
 from train import index_2_char
 from skimage import io
 
-def test_features(mean, std, file_name):
+def test_features(mean, std, file_name, enhancement_hash, enhancement_flag):
     features_list = []
     centers_list = []
-    res = read_test_files(file_name)
+    res = read_test_files(file_name, enhancement_hash=enhancement_hash, enhancement_flag = enhancement_flag)
     features_list = res[0]
     normalize(features_list, mean, std)
     return [features_list, res[1]]

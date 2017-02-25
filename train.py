@@ -53,11 +53,11 @@ def index_2_char(index, char_index):
             break
     return result
 
-def train_features(file_list, file_path, post_fix):
+def train_features(file_list, file_path, post_fix, enhancement_hash, enhancement_flag):
     features_list = []
     char_index = []
     for f_name in file_list:
-        features_list += read_files(file_path, f_name, post_fix)
+        features_list += read_files(file_path, f_name, post_fix, enhancement_hash, enhancement_flag)
         char_index.append((f_name, len(features_list)))
     mean = calc_mean(features_list)
     std = calc_std(features_list, mean)
