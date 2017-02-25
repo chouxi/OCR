@@ -16,6 +16,7 @@ import numpy as np
 from proc_files import read_test_files
 from train import normalize
 from train import index_2_char
+from skimage import io
 
 def test_features(mean, std, file_name):
     features_list = []
@@ -49,4 +50,5 @@ def k_nn(D_index, char_index, k):
 def recognition(test_features, data_base, char_index, k=5):
     D = cdist(test_features, data_base)
     D_index = np.argsort(D, axis=1)
-    return k_nn(D_index, char_index, k)
+    # return D for output cdist matrix
+    return [k_nn(D_index, char_index, k), D]

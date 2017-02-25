@@ -6,7 +6,7 @@
 #         Email: qizheng1993hit@gmail.com
 #      HomePage: https://github.com/chouxi
 #       Version: 0.0.1
-#    LastChange: 2017-02-23 23:47:52
+#    LastChange: 2017-02-24 22:52:49
 #       History:
 # =============================================================================
 '''
@@ -44,7 +44,7 @@ def binirize(threshold, img, add_text=False, prediction=[]):
     img_label = label(img_binary, background=0)
     # print np.amax(img_label)
     regions = regionprops(img_label)
-    #io.imshow(img_binary)
+    io.imshow(img_binary)
     ax = plt.gca()
     Features=[]
     centers=[]
@@ -56,12 +56,16 @@ def binirize(threshold, img, add_text=False, prediction=[]):
         minr, minc, maxr, maxc = props.bbox
         sum_length += (maxc-minc)
         sum_width += (maxr-minr)
+    lower_c = sum_length / (count * ratio)
+    lower_r = sum_width / (count * ratio)
+    upper_c = sum_length / count * ratio
+    upper_r = sum_width / count * ratio
     for props in regions:
         minr, minc, maxr, maxc = props.bbox
-        if (maxc-minc) < sum_length / (count * ratio) or (maxr-minr) < sum_width / (count * ratio) or (maxc-minc) > sum_length / count * ratio or (maxr-minr) > sum_width / count * ratio:
+        if (maxc-minc) < lower_c or (maxr-minr) < lower_r or (maxc-minc) > upper_c or (maxr-minr) > upper_r:
         #if (maxc-minc) < 10 or (maxr-minr) < 10 or (maxc-minc) > 100 or (maxr-minr) > 100:
+        #if (maxc-minc) < 10 or (maxr-minr) < 10:
             continue
-        ax.add_patch(Rectangle((minc, minr), maxc - minc, maxr - minr, fill=False, edgecolor='red', linewidth=1))
         hu = compute_hu(img_binary[minr:maxr, minc:maxc])
         #circularity
         pr = perimeter(img_binary[minr:maxr, minc:maxc])
@@ -76,10 +80,15 @@ def binirize(threshold, img, add_text=False, prediction=[]):
         Features.append(hu)
         centers.append(props.centroid)
         if add_text:
+            ax.add_patch(Rectangle((minc, minr), maxc - minc, maxr - minr, fill=False, edgecolor='red', linewidth=1))
             plt.text(props.centroid[1] + 20,props.centroid[0] +20, prediction[i],color='green', fontsize=20)
             i += 1
     plt.title("bounding box")
-    #io.show()
+    #print len(Features)
+    if add_text:
+        io.show()
+        #print threshold
+        #print lower_c, lower_r, upper_c, upper_r
     return [Features, centers]
 
 def read_files(path, file_name, post_fix, add_text=False, prediction=[]):
@@ -92,10 +101,10 @@ def read_files(path, file_name, post_fix, add_text=False, prediction=[]):
     # plt.bar(hist[1], hist[0])
     # plt.title('Histogram')
     # plt.show()
-    #return binirize(200, img)[0]
+    #return binirize(200, img, add_text, prediction)[0]
     return binirize(thresholding.threshold_yen(img), img, add_text, prediction)[0]
 
 def read_test_files(file_name, add_text=False, prediction=[]):
     img = io.imread(file_name)
-    #return binirize(200, img)
+    #return binirize(200, img, add_text, prediction)
     return binirize(thresholding.threshold_yen(img), img, add_text, prediction)
